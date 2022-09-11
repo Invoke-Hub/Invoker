@@ -3,16 +3,16 @@
 !*/
 
 # For Main Module Repository
-!/src/modules/main/**
-!/setup/**
-!/.gitignore
-!/tsconfig.json
-!/package.json
-!/readme.md
+# !/src/modules/main/**
+# !/setup/**
+# !/.gitignore
+# !/tsconfig.json
+# !/package.json
+# !/readme.md
 
 # For Valorant Module Repository
-# !/src/modules/game/valorant/**
-# !/src/modules/readme.md
+!/src/modules/game/valorant/**
+!/src/modules/readme.md
 
 # For Crypto Module Repository
 # !/src/modules/game/valorant/**
