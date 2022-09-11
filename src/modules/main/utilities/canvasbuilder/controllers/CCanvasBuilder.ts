@@ -14,7 +14,7 @@ export default class CCanvasBuilder {
 
     constructor(canvas: ICanvas) {
         canvas.fonts.forEach(font => {
-            registerFont(`${process.cwd()}/src/modules/main/utilities/canvasbuilder/resources/fonts/${font}.ttf`, { family: font })
+            registerFont(`${process.cwd()}/src/resources/Fonts/${font}.ttf`, { family: font })
         })
 
         this._canvas = new Canvas(canvas.height, canvas.width)

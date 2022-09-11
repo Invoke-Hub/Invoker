@@ -1,7 +1,6 @@
-import { CommandInteraction, EmbedBuilder, AttachmentBuilder, Channel, TextChannel, ActionRowData, APIActionRowComponent, APIMessageActionRowComponent, JSONEncodable, MessageActionRowComponentBuilder, MessageActionRowComponentData, APIAttachment, Attachment, AttachmentPayload, BufferResolvable, CacheType, SelectMenuInteraction } from "discord.js";
-import { Stream } from "stream";
-import { IBuilder } from "../interfaces/IBuilder";
+import { CommandInteraction, EmbedBuilder, AttachmentBuilder } from "discord.js";
 import CCanvasBuilder from "../../canvasbuilder/controllers/CCanvasBuilder.js";
+import { IBuilder } from "../interfaces/IBuilder";
 
 /**
  * A class that builds embeds for controllers
@@ -13,24 +12,20 @@ export default class CEmbedBuilder extends EmbedBuilder {
 
     private readonly _builder: IBuilder
 
-    private _description: string = ""
-
     private _canvas = new CCanvasBuilder({
         height: 1,
         width: 1,
         fonts: ["Heavitas"]
     })
 
-    private _files: (AttachmentBuilder | BufferResolvable | Stream | JSONEncodable<APIAttachment> | Attachment | AttachmentPayload)[] | undefined
-
-    private _components: (JSONEncodable<APIActionRowComponent<APIMessageActionRowComponent>>| ActionRowData<MessageActionRowComponentData | MessageActionRowComponentBuilder> | APIActionRowComponent<APIMessageActionRowComponent>)[] | undefined
+    private _file: AttachmentBuilder = new AttachmentBuilder(this._canvas.canvas.toBuffer(), { name: 'profile-image.png' })
 
     constructor(builder: IBuilder) {
         super()
         this._builder = builder
     }
 
-    public get interaction(): CommandInteraction | SelectMenuInteraction<CacheType> | Channel | null {
+    public get interaction(): CommandInteraction {
         return this._builder.interaction
     }
 
@@ -42,47 +37,37 @@ export default class CEmbedBuilder extends EmbedBuilder {
         this._canvas = canvas
     }
 
-    public get files(): (AttachmentBuilder | BufferResolvable | Stream | JSONEncodable<APIAttachment> | Attachment | AttachmentPayload)[] | undefined {
-        return this._files
+    public get file(): AttachmentBuilder {
+        return this._file
     }
 
-    public set files(files: (AttachmentBuilder | BufferResolvable | Stream | JSONEncodable<APIAttachment> | Attachment | AttachmentPayload)[] | undefined) {
-        this._files = files
-    }
-
-    public set components(components: (JSONEncodable<APIActionRowComponent<APIMessageActionRowComponent>>| ActionRowData<MessageActionRowComponentData | MessageActionRowComponentBuilder> | APIActionRowComponent<APIMessageActionRowComponent>)[] | undefined) {
-        this._components = components
-    }
-
-    public get description(): string {
-        return this._description
-    }
-
-    public set description(description: string) {
-        this._description = description.replaceAll(`"""`,"```")
+    public set file(file: AttachmentBuilder) {
+        this._file = file
     }
 
     /**
      * Sends the chat message
      */
     sendMessage(): void {
-        if (this.interaction instanceof CommandInteraction)
-            this.interaction.followUp({
-                embeds: [this],
-                files: this._files,
-                components: this._components
-            })
-        else
-            (this.interaction as TextChannel).send({ embeds: [this] })
+        this.interaction.followUp({
+            embeds: [
+                this,
+            ]
+        })
     }
 
-    editMessage(): void {
-        if (this.interaction instanceof SelectMenuInteraction)
-            this.interaction.editReply({
-                embeds: [this],
-                files: this._files,
-                components: this._components
-            })
+    /**
+     * Sends the chat message with file
+     */
+    sendMessageWithFile(): void {
+        this.interaction.followUp({
+            embeds: [
+                this,
+            ],
+            files: [
+                this._file
+            ]
+        })
     }
 
 }
