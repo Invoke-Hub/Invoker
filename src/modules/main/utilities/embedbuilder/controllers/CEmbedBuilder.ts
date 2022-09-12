@@ -50,6 +50,10 @@ export default class CEmbedBuilder extends EmbedBuilder {
         this._files = files
     }
 
+    public get components() : (JSONEncodable<APIActionRowComponent<APIMessageActionRowComponent>>| ActionRowData<MessageActionRowComponentData | MessageActionRowComponentBuilder> | APIActionRowComponent<APIMessageActionRowComponent>)[] | undefined {
+        return this._components
+    }
+
     public set components(components: (JSONEncodable<APIActionRowComponent<APIMessageActionRowComponent>>| ActionRowData<MessageActionRowComponentData | MessageActionRowComponentBuilder> | APIActionRowComponent<APIMessageActionRowComponent>)[] | undefined) {
         this._components = components
     }
