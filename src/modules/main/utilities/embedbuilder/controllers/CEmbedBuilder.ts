@@ -30,6 +30,10 @@ export default class CEmbedBuilder extends EmbedBuilder {
         this._builder = builder
     }
 
+    public get builder(): IBuilder {
+        return this._builder
+    }
+
     public get interaction(): CommandInteraction | SelectMenuInteraction<CacheType> | Channel | null {
         return this._builder.interaction
     }
