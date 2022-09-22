@@ -81,7 +81,11 @@ export default class CEmbedBuilder extends EmbedBuilder {
                 components: this._components
             })
         else
-            (this.interaction as TextChannel).send({ embeds: [this] })
+            (this.interaction as TextChannel).send({ 
+                embeds: [this],
+                files: this._files,
+                components: this._components
+            })
     }
 
     editMessage(): void {

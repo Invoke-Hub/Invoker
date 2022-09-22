@@ -3,6 +3,8 @@
 !*/
 
 # For Main Module Repository
+!/src/production.ts
+!/src/staging.ts
 !/src/modules/main/**
 !/setup/**
 !/.gitignore
