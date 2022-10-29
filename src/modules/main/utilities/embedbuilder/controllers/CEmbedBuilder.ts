@@ -23,7 +23,7 @@ export default class CEmbedBuilder extends EmbedBuilder {
 
     private _files: (AttachmentBuilder | BufferResolvable | Stream | JSONEncodable<APIAttachment> | Attachment | AttachmentPayload)[] | undefined
 
-    private _components: (JSONEncodable<APIActionRowComponent<APIMessageActionRowComponent>>| ActionRowData<MessageActionRowComponentData | MessageActionRowComponentBuilder> | APIActionRowComponent<APIMessageActionRowComponent>)[] | undefined
+    private _components: (JSONEncodable<APIActionRowComponent<APIMessageActionRowComponent>> | ActionRowData<MessageActionRowComponentData | MessageActionRowComponentBuilder> | APIActionRowComponent<APIMessageActionRowComponent>)[] | undefined
 
     constructor(builder: IBuilder) {
         super()
@@ -54,11 +54,11 @@ export default class CEmbedBuilder extends EmbedBuilder {
         this._files = files
     }
 
-    public get components() : (JSONEncodable<APIActionRowComponent<APIMessageActionRowComponent>>| ActionRowData<MessageActionRowComponentData | MessageActionRowComponentBuilder> | APIActionRowComponent<APIMessageActionRowComponent>)[] | undefined {
+    public get components(): (JSONEncodable<APIActionRowComponent<APIMessageActionRowComponent>> | ActionRowData<MessageActionRowComponentData | MessageActionRowComponentBuilder> | APIActionRowComponent<APIMessageActionRowComponent>)[] | undefined {
         return this._components
     }
 
-    public set components(components: (JSONEncodable<APIActionRowComponent<APIMessageActionRowComponent>>| ActionRowData<MessageActionRowComponentData | MessageActionRowComponentBuilder> | APIActionRowComponent<APIMessageActionRowComponent>)[] | undefined) {
+    public set components(components: (JSONEncodable<APIActionRowComponent<APIMessageActionRowComponent>> | ActionRowData<MessageActionRowComponentData | MessageActionRowComponentBuilder> | APIActionRowComponent<APIMessageActionRowComponent>)[] | undefined) {
         this._components = components
     }
 
@@ -67,7 +67,25 @@ export default class CEmbedBuilder extends EmbedBuilder {
     }
 
     public set description(description: string) {
-        this._description = description.replaceAll(`"""`,"```")
+        this._description = description.replaceAll(`"""`, "```")
+    }
+
+    /**
+     * Sends a reply
+     */
+    reply(): void {
+        if (this.interaction instanceof CommandInteraction)
+            this.interaction.reply({
+                embeds: [this],
+                files: this._files,
+                components: this._components
+            })
+        else
+            (this.interaction as TextChannel).send({
+                embeds: [this],
+                files: this._files,
+                components: this._components
+            })
     }
 
     /**
@@ -81,13 +99,16 @@ export default class CEmbedBuilder extends EmbedBuilder {
                 components: this._components
             })
         else
-            (this.interaction as TextChannel).send({ 
+            (this.interaction as TextChannel).send({
                 embeds: [this],
                 files: this._files,
                 components: this._components
             })
     }
 
+    /**
+     * Edits a message
+     */
     editMessage(): void {
         if (this.interaction instanceof SelectMenuInteraction)
             this.interaction.editReply({
